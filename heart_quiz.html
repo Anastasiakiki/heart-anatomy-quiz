@@ -3,43 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>心臟解剖配對練習</title>
+<title>心臟解剖連線練習｜香港護理學會教材</title>
 <style>
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    padding: 16px;
+    padding: 20px;
     background: #f2f5f9;
     color: #182230;
-    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+    font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
   }
   main {
     max-width: 820px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 24px;
     background: white;
     border-radius: 18px;
     box-shadow: 0 8px 28px #15223818;
   }
-  h1 { margin: 0 0 8px; font-size: 1.4rem; }
-  .hint { margin: 0 0 16px; color: #526174; line-height: 1.5; font-size:0.95rem; }
+  h1 { margin: 0 0 8px; font-size: 1.7rem; }
+  .hint { margin: 0 0 18px; color: #526174; line-height: 1.6; }
   select, button { font: inherit; }
   select {
     width: 100%;
-    padding:10px;
-    margin-bottom:12px;
-    border:1px solid #cbd5e1;
-    border-radius:10px;
-    background:white;
+    padding: 12px;
+    margin-bottom: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: white;
   }
   .status {
-    min-height:26px;
-    margin:6px 0 10px;
-    font-weight:700;
+    min-height: 28px;
+    margin: 8px 0 12px;
+    font-weight: 700;
   }
   .timer-box{
     background:#eef6ff;
-    padding:10px 12px;
+    padding:10px 14px;
     border-radius:10px;
     margin-bottom:12px;
     font-weight:bold;
@@ -50,87 +50,89 @@
     background:#f8fafc;
     border:1px solid #dbe3ec;
     border-radius:12px;
-    padding:10px;
-    margin-bottom:14px;
+    padding:12px;
+    margin-bottom:16px;
     text-align:center;
   }
   .img-wrap img{
     max-width:100%;
-    max-height:360px;
+    max-height:420px;
     object-fit:contain;
   }
   .columns {
     display: grid;
     grid-template-columns: 0.75fr 1.6fr;
-    gap:10px;
+    gap: 12px;
   }
-  .col-title {
-    padding:6px 8px;
-    color:#526174;
-    font-size:0.85rem;
-    font-weight:700;
+  .column-title {
+    padding: 8px 10px;
+    color: #526174;
+    font-size: .9rem;
+    font-weight: 700;
   }
   .item {
-    width:100%;
-    min-height:48px;
-    margin-bottom:6px;
-    padding:8px 10px;
-    text-align:left;
-    color:#182230;
-    background:#f8fafc;
-    border:2px solid #dbe3ec;
-    border-radius:10px;
-    cursor:pointer;
-    transition:0.15s;
+    width: 100%;
+    min-height: 52px;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    text-align: left;
+    color: #182230;
+    background: #f8fafc;
+    border: 2px solid #dbe3ec;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: .15s;
   }
+  .item:hover { border-color: #7398ce; }
   .item.selected {
-    background:#e8f1ff;
-    border-color:#3478d4;
+    background: #e8f1ff;
+    border-color: #3478d4;
   }
   .item.matched {
-    color:#17633a;
-    background:#e9f8ef;
-    border-color:#68b884;
-    cursor:default;
+    color: #17633a;
+    background: #e9f8ef;
+    border-color: #68b884;
+    cursor: default;
   }
   .item.wrong {
-    background:#fff0f0;
-    border-color:#e27676;
+    background: #fff0f0;
+    border-color: #e27676;
   }
   .controls {
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
   }
   .control {
-    padding:8px 12px;
-    border:0;
-    border-radius:10px;
-    background:#e8edf4;
-    cursor:pointer;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: #e8edf4;
+    cursor: pointer;
   }
-  .control.primary { color:white; background:#2868bd; }
+  .control.primary { color: white; background: #2868bd; }
   .result-panel{
-    margin-top:14px;
-    padding:14px;
+    margin-top:16px;
+    padding:16px;
     background:#f0f7ff;
-    border-radius:12px;
+    border-radius:14px;
     display:none;
   }
-  .note { margin-top:14px; color:#64748b; font-size:0.82rem; }
-  @media (max-width:520px) {
-    body{padding:10px;}
-    main{padding:16px;}
-    .columns { grid-template-columns: 1fr 1fr; gap:8px; }
-    .img-wrap img{max-height:260px;}
+  .note { margin-top: 16px; color: #64748b; font-size: .9rem; }
+  @media (max-width: 520px) {
+    body { padding: 10px; }
+    main { padding: 16px; }
+    .columns { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .item { padding: 9px; font-size: .93rem; }
+    .img-wrap img{max-height:280px;}
   }
 </style>
 </head>
 <body>
 <main>
-  <h1>心臟解剖配對練習</h1>
-  <p class="hint">選擇題組，先點左邊字母，再點右邊對應結構。答錯可以重試。</p>
+  <h1>心臟解剖連線練習｜香港護理學會教材</h1>
+  <p class="hint">選擇題組，先點左邊的標示字母，再點右邊相對應的結構。答錯可以重複嘗試。</p>
 
   <label for="set"><strong>題組</strong></label>
   <select id="set">
@@ -141,13 +143,14 @@
     <option value="vessels">心臟主要大血管 Major vessels</option>
     <option value="coronaryA">冠狀動脈供血 Coronary arterial</option>
     <option value="coronaryV">冠狀靜脈回流 Coronary venous</option>
-    <option value="myocardium">心肌 Myocardium（暫無圖）</option>
-    <option value="conduction">心臟傳導系統（暫無圖）</option>
-    <option value="pericardium">心包 Pericardium（暫無圖）</option>
+    <option value="myocardium">心肌 Myocardium</option>
+    <option value="conduction">心臟傳導系統</option>
+    <option value="pericardium">心包 Pericardium</option>
   </select>
 
   <div class="timer-box">計時：<span id="timer">00:00</span>｜總嘗試次數：<span id="attemptCount">0</span></div>
 
+  <!-- 解剖圖顯示區，放你PDF截圖 -->
   <div class="img-wrap">
     <img id="diagramImg" alt="心臟解剖圖">
   </div>
@@ -155,11 +158,11 @@
   <div class="status" id="status" aria-live="polite"></div>
   <div class="columns">
     <section>
-      <div class="col-title">標示字母</div>
+      <div class="column-title">標示字母</div>
       <div id="letters"></div>
     </section>
     <section>
-      <div class="col-title">結構名稱（順序已打亂）</div>
+      <div class="column-title">結構名稱（順序已打亂）</div>
       <div id="names"></div>
     </section>
   </div>
@@ -169,6 +172,7 @@
     <button class="control" id="showAnswers">顯示答案</button>
   </div>
 
+  <!-- 成績報告面板 -->
   <div class="result-panel" id="resultPanel">
     <h3>📋 本組成績報告</h3>
     <p>總題目：<span id="qTotal"></span></p>
@@ -176,10 +180,10 @@
     <p>總嘗試次數：<span id="totalAttempts"></span></p>
     <p>得分：<span id="score"></span> 分</p>
     <p>耗時：<span id="usedTime"></span></p>
-    <p>錯題記錄（多次錯誤都會記低）：<div id="wrongList"></div></p>
+    <p>錯題記錄（多次錯誤都會記錄）：<div id="wrongList"></div></p>
   </div>
 
-  <p class="note">備註：myocardium / conduction / pericardium 暫未加入圖片，有截圖放入資料夾就會顯示。</p>
+  <p class="note">📌 使用方法：將PDF入面每幅解剖圖截圖，改名為 anterior.jpg、posterior.jpg 等，同html檔放喺同一個資料夾。切換題組會自動載入對應圖片。</p>
 </main>
 
 <script>
@@ -274,7 +278,7 @@ const sets = {
     name:"心臟傳導系統",
     img:"conduction.jpg",
     pairs:[
-      ["A","竇房結 SA node"],
+      ["A","竇房結 SA node（起搏點）"],
       ["B","房室結 AV node"],
       ["C","希氏束 Bundle of His"],
       ["D","左束支 Left bundle branch"],
@@ -287,9 +291,9 @@ const sets = {
     img:"pericardium.jpg",
     pairs:[
       ["A","纖維心包 Fibrous pericardium"],
-      ["B","漿膜壁層 Parietal layer"],
-      ["C","心包腔 Pericardial cavity"],
-      ["D","漿膜臟層 Visceral layer"]
+      ["B","漿膜心包壁層 Parietal serous pericardium"],
+      ["C","心包腔 Pericardial cavity（含心包液）"],
+      ["D","漿膜心包臟層 Visceral serous pericardium / 心外膜"]
     ]
   }
 };
@@ -302,34 +306,29 @@ const diagramImg = document.getElementById("diagramImg");
 const timerEl = document.getElementById("timer");
 const attemptCountEl = document.getElementById("attemptCount");
 const resultPanel = document.getElementById("resultPanel");
-const qTotalEl = document.getElementById("qTotal");
-const qCorrectEl = document.getElementById("qCorrect");
-const totalAttemptsEl = document.getElementById("totalAttempts");
-const scoreEl = document.getElementById("score");
-const usedTimeEl = document.getElementById("usedTime");
-const wrongListEl = document.getElementById("wrongList");
 
 let selectedLetter = null;
-let selectedNameBtn = null;
+let selectedName = null;
 let matched = new Set();
+let wrongPair = [];
 let wrongList = [];
 let startTime = null;
 let timerInterval = null;
 let totalAttempts = 0;
 
-function shuffle(arr){
-  const copy = [...arr];
-  for(let i=copy.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [copy[i],copy[j]] = [copy[j],copy[i]];
+function shuffle(items) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
 }
 
-function formatTime(sec){
-  const m = String(Math.floor(sec/60)).padStart(2,"0");
-  const s = String(sec%60).padStart(2,"0");
-  return `${m}:${s}`;
+function formatTime(seconds){
+  const min = String(Math.floor(seconds/60)).padStart(2,"0");
+  const sec = String(seconds%60).padStart(2,"0");
+  return `${min}:${sec}`;
 }
 
 function updateTimer(){
@@ -338,132 +337,154 @@ function updateTimer(){
   timerEl.textContent = formatTime(sec);
 }
 
-function startRound(){
-  resultPanel.style.display = "none";
-  matched.clear();
+function startRound() {
+  selectedLetter = null;
+  selectedName = null;
+  matched = new Set();
+  wrongPair = [];
   wrongList = [];
   totalAttempts = 0;
   attemptCountEl.textContent = totalAttempts;
-  statusEl.textContent = "";
-  selectedLetter = null;
-  selectedNameBtn = null;
+  resultPanel.style.display = "none";
+
+  const currentSet = sets[setSelect.value];
+  const pairs = currentSet.pairs;
+
+  diagramImg.src = currentSet.img;
+  diagramImg.alt = currentSet.name + " 解剖圖";
+
+  lettersEl.replaceChildren();
+  namesEl.replaceChildren();
+
+  pairs.forEach(([letter]) => {
+    const button = makeButton(letter, "letter");
+    lettersEl.append(button);
+  });
+
+  shuffle(pairs).forEach(([letter, name]) => {
+    const button = makeButton(name, "name");
+    button.dataset.answer = letter;
+    namesEl.append(button);
+  });
 
   if(timerInterval) clearInterval(timerInterval);
   startTime = Date.now();
-  timerInterval = setInterval(updateTimer,1000);
+  timerEl.textContent = "00:00";
+  timerInterval = setInterval(updateTimer, 1000);
 
-  const current = sets[setSelect.value];
-  diagramImg.src = current.img;
-  diagramImg.alt = current.name;
-
-  lettersEl.innerHTML = "";
-  namesEl.innerHTML = "";
-
-  current.pairs.forEach(([letter])=>{
-    const btn = document.createElement("button");
-    btn.className = "item";
-    btn.textContent = letter;
-    btn.dataset.type = "letter";
-    btn.dataset.val = letter;
-    btn.onclick = ()=>pickLetter(btn);
-    lettersEl.appendChild(btn);
-  });
-
-  const shuffledNames = shuffle(current.pairs);
-  shuffledNames.forEach(([letter,name])=>{
-    const btn = document.createElement("button");
-    btn.className = "item";
-    btn.textContent = name;
-    btn.dataset.type = "name";
-    btn.dataset.answer = letter;
-    btn.onclick = ()=>pickName(btn);
-    namesEl.appendChild(btn);
-  });
+  updateStatus();
 }
 
-function pickLetter(btn){
-  if(btn.classList.contains("matched")) return;
-  document.querySelectorAll('[data-type="letter"]').forEach(b=>b.classList.remove("selected"));
-  btn.classList.add("selected");
-  selectedLetter = btn.dataset.val;
-  selectedNameBtn = null;
-  statusEl.textContent = `揀咗字母 ${selectedLetter}，請揀對應結構`;
+function makeButton(text, type) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "item";
+  button.textContent = text;
+  button.dataset.type = type;
+  button.addEventListener("click", () => choose(button));
+  return button;
 }
 
-function pickName(btn){
-  if(btn.classList.contains("matched")) return;
-  if(!selectedLetter){
-    statusEl.textContent = "請先點左邊字母！";
-    return;
+function choose(button) {
+  if (button.classList.contains("matched")) return;
+
+  if (button.dataset.type === "letter") {
+    document.querySelectorAll('[data-type="letter"]').forEach(el => el.classList.remove("selected"));
+    selectedLetter = button.textContent;
+    button.classList.add("selected");
+  } else {
+    document.querySelectorAll('[data-type="name"]').forEach(el => el.classList.remove("selected"));
+    selectedName = button;
+    button.classList.add("selected");
   }
-  document.querySelectorAll('[data-type="name"]').forEach(b=>b.classList.remove("selected"));
-  btn.classList.add("selected");
-  selectedNameBtn = btn;
-  totalAttempts++;
+
+  if (selectedLetter && selectedName) checkPair();
+}
+
+function checkPair() {
+  totalAttempts +=1;
   attemptCountEl.textContent = totalAttempts;
 
-  const correctLetter = btn.dataset.answer;
-  if(correctLetter === selectedLetter){
-    statusEl.textContent = "✅ 正確！";
-    matched.add(selectedLetter);
-    document.querySelector(`[data-val="${selectedLetter}"][data-type="letter"]`).classList.add("matched");
-    btn.classList.add("matched");
-  }else{
-    statusEl.textContent = "❌ 唔啱，再試一次";
-    wrongList.push({letter:selectedLetter, guess:btn.textContent});
-    const letterBtn = document.querySelector(`[data-val="${selectedLetter}"][data-type="letter"]`);
-    letterBtn.classList.add("wrong");
-    btn.classList.add("wrong");
-    setTimeout(()=>{
-      letterBtn.classList.remove("wrong","selected");
-      btn.classList.remove("wrong","selected");
-    },700);
-  }
-  selectedLetter = null;
-  selectedNameBtn = null;
+  const letterButton = [...document.querySelectorAll('[data-type="letter"]')]
+    .find(el => el.textContent === selectedLetter);
+  const letter = selectedLetter;
+  const nameText = selectedName.textContent;
 
-  const current = sets[setSelect.value];
-  if(matched.size === current.pairs.length){
-    clearInterval(timerInterval);
-    showResult();
+  if (selectedName.dataset.answer === selectedLetter) {
+    letterButton.classList.remove("selected");
+    selectedName.classList.remove("selected");
+    letterButton.classList.add("matched");
+    selectedName.classList.add("matched");
+    matched.add(selectedLetter);
+    statusEl.textContent = "答對了！";
+    statusEl.style.color = "#17633a";
+  } else {
+    letterButton.classList.add("wrong");
+    selectedName.classList.add("wrong");
+    wrongPair = [letterButton, selectedName];
+    wrongList.push({letter, name:nameText});
+    statusEl.textContent = "還不對，再試一次。";
+    statusEl.style.color = "#b42318";
+    setTimeout(() => {
+      wrongPair.forEach(el => el.classList.remove("wrong", "selected"));
+      wrongPair = [];
+    }, 650);
   }
+
+  selectedLetter = null;
+  selectedName = null;
+  setTimeout(updateStatus, 700);
 }
 
 function showResult(){
-  const current = sets[setSelect.value];
-  const total = current.pairs.length;
-  const score = Math.round((matched.size / total)*100);
+  clearInterval(timerInterval);
+  const total = sets[setSelect.value].pairs.length;
+  const correct = matched.size;
+  const wrong = wrongList.length;
+  const score = Math.round((correct/total)*100);
   const usedSec = Math.floor((Date.now() - startTime)/1000);
 
-  qTotalEl.textContent = total;
-  qCorrectEl.textContent = matched.size;
-  totalAttemptsEl.textContent = totalAttempts;
-  scoreEl.textContent = score;
-  usedTimeEl.textContent = formatTime(usedSec);
+  document.getElementById("qTotal").textContent = total;
+  document.getElementById("qCorrect").textContent = correct;
+  document.getElementById("totalAttempts").textContent = totalAttempts;
+  document.getElementById("score").textContent = score;
+  document.getElementById("usedTime").textContent = formatTime(usedSec);
 
+  const wrongListEl = document.getElementById("wrongList");
   wrongListEl.innerHTML = "";
-  if(wrongList.length === 0){
-    wrongListEl.innerText = "無錯題！";
+  if(wrongList.length ===0){
+    wrongListEl.innerText = "無錯題，全部正確🎉";
   }else{
     wrongList.forEach(item=>{
       const p = document.createElement("p");
-      p.innerText = `${item.letter}：揀咗「${item.guess}」`;
+      p.textContent = `${item.letter} 錯配：${item.name}`;
       wrongListEl.appendChild(p);
     })
   }
   resultPanel.style.display = "block";
 }
 
-function showAllAnswers(){
-  const current = sets[setSelect.value];
-  let ansText = "答案：";
-  current.pairs.forEach(([l,n])=> ansText += `${l}=${n}｜`);
-  statusEl.textContent = ansText;
+function updateStatus() {
+  const total = sets[setSelect.value].pairs.length;
+  if (matched.size === total) {
+    statusEl.textContent = `全部答對！${matched.size}／${total}`;
+    statusEl.style.color = "#17633a";
+    setTimeout(showResult, 600);
+  } else {
+    statusEl.textContent = `已配對 ${matched.size}／${total}`;
+    statusEl.style.color = "#182230";
+  }
 }
 
 document.getElementById("restart").addEventListener("click", startRound);
-document.getElementById("showAnswers").addEventListener("click", showAllAnswers);
 setSelect.addEventListener("change", startRound);
+
+document.getElementById("showAnswers").addEventListener("click", () => {
+  const currentSet = sets[setSelect.value];
+  const pairs = currentSet.pairs;
+  statusEl.textContent = pairs.map(([letter, name]) => `${letter}＝${name}`).join("　｜　");
+  statusEl.style.color = "#2868bd";
+});
 
 startRound();
 </script>
