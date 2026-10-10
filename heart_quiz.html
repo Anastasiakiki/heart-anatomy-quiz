@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>心臟解剖配對練習</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 16px;
+    background: #f2f5f9;
+    color: #182230;
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+  }
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 8px 28px #15223818;
+  }
+  h1 { margin: 0 0 8px; font-size: 1.4rem; }
+  .hint { margin: 0 0 16px; color: #526174; line-height: 1.5; font-size:0.95rem; }
+  select, button { font: inherit; }
+  select {
+    width: 100%;
+    padding:10px;
+    margin-bottom:12px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    background:white;
+  }
+  .status {
+    min-height:26px;
+    margin:6px 0 10px;
+    font-weight:700;
+  }
+  .timer-box{
+    background:#eef6ff;
+    padding:10px 12px;
+    border-radius:10px;
+    margin-bottom:12px;
+    font-weight:bold;
+    color:#2868bd;
+  }
+  .img-wrap{
+    width:100%;
+    background:#f8fafc;
+    border:1px solid #dbe3ec;
+    border-radius:12px;
+    padding:10px;
+    margin-bottom:14px;
+    text-align:center;
+  }
+  .img-wrap img{
+    max-width:100%;
+    max-height:360px;
+    object-fit:contain;
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: 0.75fr 1.6fr;
+    gap:10px;
+  }
+  .col-title {
+    padding:6px 8px;
+    color:#526174;
+    font-size:0.85rem;
+    font-weight:700;
+  }
+  .item {
+    width:100%;
+    min-height:48px;
+    margin-bottom:6px;
+    padding:8px 10px;
+    text-align:left;
+    color:#182230;
+    background:#f8fafc;
+    border:2px solid #dbe3ec;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.15s;
+  }
+  .item.selected {
+    background:#e8f1ff;
+    border-color:#3478d4;
+  }
+  .item.matched {
+    color:#17633a;
+    background:#e9f8ef;
+    border-color:#68b884;
+    cursor:default;
+  }
+  .item.wrong {
+    background:#fff0f0;
+    border-color:#e27676;
+  }
+  .controls {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+  }
+  .control {
+    padding:8px 12px;
+    border:0;
+    border-radius:10px;
+    background:#e8edf4;
+    cursor:pointer;
+  }
+  .control.primary { color:white; background:#2868bd; }
+  .result-panel{
+    margin-top:14px;
+    padding:14px;
+    background:#f0f7ff;
+    border-radius:12px;
+    display:none;
+  }
+  .note { margin-top:14px; color:#64748b; font-size:0.82rem; }
+  @media (max-width:520px) {
+    body{padding:10px;}
+    main{padding:16px;}
+    .columns { grid-template-columns: 1fr 1fr; gap:8px; }
+    .img-wrap img{max-height:260px;}
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>心臟解剖配對練習</h1>
+  <p class="hint">選擇題組，先點左邊字母，再點右邊對應結構。答錯可以重試。</p>
+
+  <label for="set"><strong>題組</strong></label>
+  <select id="set">
+    <option value="anterior">心臟前面觀 Anterior view</option>
+    <option value="posterior">心臟後面觀 Posterior view</option>
+    <option value="chambers">心臟腔室 Chambers of heart</option>
+    <option value="valves">心臟瓣膜 Heart valves</option>
+    <option value="vessels">心臟主要大血管 Major vessels</option>
+    <option value="coronaryA">冠狀動脈供血 Coronary arterial</option>
+    <option value="coronaryV">冠狀靜脈回流 Coronary venous</option>
+    <option value="myocardium">心肌 Myocardium（暫無圖）</option>
+    <option value="conduction">心臟傳導系統（暫無圖）</option>
+    <option value="pericardium">心包 Pericardium（暫無圖）</option>
+  </select>
+
+  <div class="timer-box">計時：<span id="timer">00:00</span>｜總嘗試次數：<span id="attemptCount">0</span></div>
+
+  <div class="img-wrap">
+    <img id="diagramImg" alt="心臟解剖圖">
+  </div>
+
+  <div class="status" id="status" aria-live="polite"></div>
+  <div class="columns">
+    <section>
+      <div class="col-title">標示字母</div>
+      <div id="letters"></div>
+    </section>
+    <section>
+      <div class="col-title">結構名稱（順序已打亂）</div>
+      <div id="names"></div>
+    </section>
+  </div>
+
+  <div class="controls">
+    <button class="control primary" id="restart">重新開始</button>
+    <button class="control" id="showAnswers">顯示答案</button>
+  </div>
+
+  <div class="result-panel" id="resultPanel">
+    <h3>📋 本組成績報告</h3>
+    <p>總題目：<span id="qTotal"></span></p>
+    <p>答對：<span id="qCorrect"></span></p>
+    <p>總嘗試次數：<span id="totalAttempts"></span></p>
+    <p>得分：<span id="score"></span> 分</p>
+    <p>耗時：<span id="usedTime"></span></p>
+    <p>錯題記錄（多次錯誤都會記低）：<div id="wrongList"></div></p>
+  </div>
+
+  <p class="note">備註：myocardium / conduction / pericardium 暫未加入圖片，有截圖放入資料夾就會顯示。</p>
+</main>
+
+<script>
+const sets = {
+  anterior: {
+    name:"心臟前面觀 Anterior view",
+    img:"anterior.jpg",
+    pairs:[
+      ["A", "右心房 Right atrium"],
+      ["B", "左心房 Left atrium"],
+      ["C", "右心室 Right ventricle"],
+      ["D", "左心室 Left ventricle"],
+      ["E", "大動脈 Aorta"],
+      ["F", "肺動脈幹 Pulmonary trunk"]
+    ]
+  },
+  posterior: {
+    name:"心臟後面觀 Posterior view",
+    img:"posterior.jpg",
+    pairs:[
+      ["A", "大動脈 Aorta"],
+      ["B", "肺動脈 Pulmonary arteries"],
+      ["C", "心尖 Apex"],
+      ["D", "上腔靜脈 Superior vena cava"],
+      ["E", "肺靜脈 Pulmonary veins"]
+    ]
+  },
+  chambers: {
+    name:"心臟腔室 Chambers of heart",
+    img:"chambers.jpg",
+    pairs:[
+      ["A", "右心房 Right atrium"],
+      ["B", "左心房 Left atrium"],
+      ["C", "右心室 Right ventricle"],
+      ["D", "左心室 Left ventricle"]
+    ]
+  },
+  valves: {
+    name:"心臟瓣膜 Heart valves",
+    img:"valves.jpg",
+    pairs:[
+      ["A", "二尖瓣 Bicuspid valve"],
+      ["B", "三尖瓣 Tricuspid valve"],
+      ["C", "大動脈半月瓣 Aortic semilunar valve"],
+      ["D", "肺動脈半月瓣 Pulmonary semilunar valve"]
+    ]
+  },
+  vessels: {
+    name:"心臟主要大血管 Major vessels",
+    img:"vessels.jpg",
+    pairs:[
+      ["A", "升主動脈 Ascending aorta"],
+      ["B", "大動脈弓 Aortic arch"],
+      ["C", "頭臂動脈幹 Brachiocephalic trunk"],
+      ["D", "左總頸動脈 Left common carotid artery"],
+      ["E", "左鎖骨下動脈 Left subclavian artery"],
+      ["F", "上腔靜脈 Superior vena cava"],
+      ["G", "肺動脈幹 Pulmonary trunk"]
+    ]
+  },
+  coronaryA: {
+    name:"冠狀動脈供血 Coronary arterial",
+    img:"coronaryA.jpg",
+    pairs:[
+      ["A", "升主動脈 Ascending aorta"],
+      ["B", "左冠狀動脈 Left coronary artery"],
+      ["C", "前室間動脈 Anterior interventricular artery"],
+      ["D", "右冠狀動脈 Right coronary artery"]
+    ]
+  },
+  coronaryV: {
+    name:"冠狀靜脈回流 Coronary venous",
+    img:"coronaryV.jpg",
+    pairs:[
+      ["A", "冠狀靜脈竇 Coronary sinus"],
+      ["B", "冠狀靜脈竇開口 Opening of the coronary sinus"],
+      ["C", "右心房 Right atrium"]
+    ]
+  },
+  myocardium:{
+    name:"心肌 Myocardium",
+    img:"myocardium.jpg",
+    pairs:[
+      ["A","心內膜 Endocardium"],
+      ["B","心肌層 Myocardium"],
+      ["C","心外膜 Epicardium"],
+      ["D","心房心肌 Atrial myocardium"],
+      ["E","心室心肌 Ventricular myocardium"]
+    ]
+  },
+  conduction:{
+    name:"心臟傳導系統",
+    img:"conduction.jpg",
+    pairs:[
+      ["A","竇房結 SA node"],
+      ["B","房室結 AV node"],
+      ["C","希氏束 Bundle of His"],
+      ["D","左束支 Left bundle branch"],
+      ["E","右束支 Right bundle branch"],
+      ["F","浦肯野纖維 Purkinje fibres"]
+    ]
+  },
+  pericardium:{
+    name:"心包 Pericardium",
+    img:"pericardium.jpg",
+    pairs:[
+      ["A","纖維心包 Fibrous pericardium"],
+      ["B","漿膜壁層 Parietal layer"],
+      ["C","心包腔 Pericardial cavity"],
+      ["D","漿膜臟層 Visceral layer"]
+    ]
+  }
+};
+
+const setSelect = document.getElementById("set");
+const lettersEl = document.getElementById("letters");
+const namesEl = document.getElementById("names");
+const statusEl = document.getElementById("status");
+const diagramImg = document.getElementById("diagramImg");
+const timerEl = document.getElementById("timer");
+const attemptCountEl = document.getElementById("attemptCount");
+const resultPanel = document.getElementById("resultPanel");
+const qTotalEl = document.getElementById("qTotal");
+const qCorrectEl = document.getElementById("qCorrect");
+const totalAttemptsEl = document.getElementById("totalAttempts");
+const scoreEl = document.getElementById("score");
+const usedTimeEl = document.getElementById("usedTime");
+const wrongListEl = document.getElementById("wrongList");
+
+let selectedLetter = null;
+let selectedNameBtn = null;
+let matched = new Set();
+let wrongList = [];
+let startTime = null;
+let timerInterval = null;
+let totalAttempts = 0;
+
+function shuffle(arr){
+  const copy = [...arr];
+  for(let i=copy.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]] = [copy[j],copy[i]];
+  }
+  return copy;
+}
+
+function formatTime(sec){
+  const m = String(Math.floor(sec/60)).padStart(2,"0");
+  const s = String(sec%60).padStart(2,"0");
+  return `${m}:${s}`;
+}
+
+function updateTimer(){
+  if(!startTime) return;
+  const sec = Math.floor((Date.now() - startTime)/1000);
+  timerEl.textContent = formatTime(sec);
+}
+
+function startRound(){
+  resultPanel.style.display = "none";
+  matched.clear();
+  wrongList = [];
+  totalAttempts = 0;
+  attemptCountEl.textContent = totalAttempts;
+  statusEl.textContent = "";
+  selectedLetter = null;
+  selectedNameBtn = null;
+
+  if(timerInterval) clearInterval(timerInterval);
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer,1000);
+
+  const current = sets[setSelect.value];
+  diagramImg.src = current.img;
+  diagramImg.alt = current.name;
+
+  lettersEl.innerHTML = "";
+  namesEl.innerHTML = "";
+
+  current.pairs.forEach(([letter])=>{
+    const btn = document.createElement("button");
+    btn.className = "item";
+    btn.textContent = letter;
+    btn.dataset.type = "letter";
+    btn.dataset.val = letter;
+    btn.onclick = ()=>pickLetter(btn);
+    lettersEl.appendChild(btn);
+  });
+
+  const shuffledNames = shuffle(current.pairs);
+  shuffledNames.forEach(([letter,name])=>{
+    const btn = document.createElement("button");
+    btn.className = "item";
+    btn.textContent = name;
+    btn.dataset.type = "name";
+    btn.dataset.answer = letter;
+    btn.onclick = ()=>pickName(btn);
+    namesEl.appendChild(btn);
+  });
+}
+
+function pickLetter(btn){
+  if(btn.classList.contains("matched")) return;
+  document.querySelectorAll('[data-type="letter"]').forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  selectedLetter = btn.dataset.val;
+  selectedNameBtn = null;
+  statusEl.textContent = `揀咗字母 ${selectedLetter}，請揀對應結構`;
+}
+
+function pickName(btn){
+  if(btn.classList.contains("matched")) return;
+  if(!selectedLetter){
+    statusEl.textContent = "請先點左邊字母！";
+    return;
+  }
+  document.querySelectorAll('[data-type="name"]').forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  selectedNameBtn = btn;
+  totalAttempts++;
+  attemptCountEl.textContent = totalAttempts;
+
+  const correctLetter = btn.dataset.answer;
+  if(correctLetter === selectedLetter){
+    statusEl.textContent = "✅ 正確！";
+    matched.add(selectedLetter);
+    document.querySelector(`[data-val="${selectedLetter}"][data-type="letter"]`).classList.add("matched");
+    btn.classList.add("matched");
+  }else{
+    statusEl.textContent = "❌ 唔啱，再試一次";
+    wrongList.push({letter:selectedLetter, guess:btn.textContent});
+    const letterBtn = document.querySelector(`[data-val="${selectedLetter}"][data-type="letter"]`);
+    letterBtn.classList.add("wrong");
+    btn.classList.add("wrong");
+    setTimeout(()=>{
+      letterBtn.classList.remove("wrong","selected");
+      btn.classList.remove("wrong","selected");
+    },700);
+  }
+  selectedLetter = null;
+  selectedNameBtn = null;
+
+  const current = sets[setSelect.value];
+  if(matched.size === current.pairs.length){
+    clearInterval(timerInterval);
+    showResult();
+  }
+}
+
+function showResult(){
+  const current = sets[setSelect.value];
+  const total = current.pairs.length;
+  const score = Math.round((matched.size / total)*100);
+  const usedSec = Math.floor((Date.now() - startTime)/1000);
+
+  qTotalEl.textContent = total;
+  qCorrectEl.textContent = matched.size;
+  totalAttemptsEl.textContent = totalAttempts;
+  scoreEl.textContent = score;
+  usedTimeEl.textContent = formatTime(usedSec);
+
+  wrongListEl.innerHTML = "";
+  if(wrongList.length === 0){
+    wrongListEl.innerText = "無錯題！";
+  }else{
+    wrongList.forEach(item=>{
+      const p = document.createElement("p");
+      p.innerText = `${item.letter}：揀咗「${item.guess}」`;
+      wrongListEl.appendChild(p);
+    })
+  }
+  resultPanel.style.display = "block";
+}
+
+function showAllAnswers(){
+  const current = sets[setSelect.value];
+  let ansText = "答案：";
+  current.pairs.forEach(([l,n])=> ansText += `${l}=${n}｜`);
+  statusEl.textContent = ansText;
+}
+
+document.getElementById("restart").addEventListener("click", startRound);
+document.getElementById("showAnswers").addEventListener("click", showAllAnswers);
+setSelect.addEventListener("change", startRound);
+
+startRound();
+</script>
+</body>
+</html>
